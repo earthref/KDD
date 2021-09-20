@@ -1,0 +1,572 @@
+{
+  "mappings": {
+    "_doc": {
+      "dynamic": "strict",
+      "properties": {
+        "type": {
+          "type": "text"
+        },
+        "contribution": {
+          "type": "object",
+          "enabled": false
+        },
+        "rows": {
+          "type": "object",
+          "enabled": false
+        },
+        "summary": {
+          "properties": {
+            "_incomplete_summary": {
+              "type": "boolean",
+              "null_value": false
+            },
+            "contribution": {
+              "properties": {
+                "_author": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "_contributor": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "_has_data_doi": {
+                  "type": "boolean",
+                  "null_value": false
+                },
+                "_history": {
+                  "properties": {
+                    "contributor": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "data_model_version": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "description": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "timestamp": {
+                      "type": "date",
+                      "format": "year||year_month||date||date_time||date_time_no_millis||yyyy-MM-dd'T'HH:mm:ss.SSZZ"
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "_is_activated": {
+                  "type": "boolean",
+                  "null_value": false
+                },
+                "_is_latest": {
+                  "type": "boolean",
+                  "null_value": false
+                },
+                "_is_valid": {
+                  "type": "boolean"
+                },
+                "_name": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "_private_key": {
+                  "type": "keyword"
+                },
+                "_reference": {
+                  "properties": {
+                    "abstract_html": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "authors": {
+                      "properties": {
+                        "_name": {
+                          "type": "text",
+                          "fields": {
+                            "raw": {
+                              "type": "keyword"
+                            }
+                          }
+                        },
+                        "_orcid": {
+                          "type": "text",
+                          "fields": {
+                            "raw": {
+                              "type": "keyword"
+                            }
+                          }
+                        },
+                        "_username": {
+                          "type": "text",
+                          "fields": {
+                            "raw": {
+                              "type": "keyword"
+                            }
+                          }
+                        },
+                        "affiliation": {
+                          "type": "text",
+                          "fields": {
+                            "raw": {
+                              "type": "keyword"
+                            }
+                          }
+                        },
+                        "family": {
+                          "type": "text",
+                          "fields": {
+                            "raw": {
+                              "type": "keyword"
+                            }
+                          }
+                        },
+                        "given": {
+                          "type": "text",
+                          "fields": {
+                            "raw": {
+                              "type": "keyword"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "citation": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "doi": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "html": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "journal": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "keywords": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "long_authors": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "n_citations": {
+                      "type": "integer"
+                    },
+                    "source": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "tags": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "title": {
+                      "type": "text",
+                      "fields": {
+                        "raw": {
+                          "type": "keyword"
+                        }
+                      }
+                    },
+                    "year": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "author": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "contributor": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "data_model_version": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "description": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "is_reviewed": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "is_validated": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "lab_names": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "reference": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "supplemental_links": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "timestamp": {
+                  "type": "date",
+                  "format": "year||year_month||date||date_time||date_time_no_millis||yyyy-MM-dd'T'HH:mm:ss.SSZZ"
+                },
+                "version": {
+                  "type": "integer"
+                }
+              }
+            },
+            "kds": {
+              "properties": {
+                "_n_kds": {
+                  "type": "integer"
+                },
+                "_n_results": {
+                  "type": "integer"
+                },
+                "rock_types": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "minerals": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "element": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "_element_name": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "kd": {
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "range": {
+                      "type": "float_range"
+                    },
+                    "vals": {
+                      "type": "object",
+                      "enabled": false
+                    }
+                  }
+                },
+                "kd_sigma": {
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "range": {
+                      "type": "float_range"
+                    },
+                    "vals": {
+                      "type": "object",
+                      "enabled": false
+                    }
+                  }
+                },
+                "kd_low": {
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "range": {
+                      "type": "float_range"
+                    },
+                    "vals": {
+                      "type": "object",
+                      "enabled": false
+                    }
+                  }
+                },
+                "kd_high": {
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "range": {
+                      "type": "float_range"
+                    },
+                    "vals": {
+                      "type": "object",
+                      "enabled": false
+                    }
+                  }
+                },
+                "kd_definition": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "kd_types": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                }
+              }
+            },
+            "_all": {
+              "properties": {
+                "_n_kds": {
+                  "type": "integer"
+                },
+                "_n_results": {
+                  "type": "integer"
+                },
+                "rock_types": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "minerals": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "element": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "_element_name": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "kd": {
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "range": {
+                      "type": "float_range"
+                    },
+                    "vals": {
+                      "type": "object",
+                      "enabled": false
+                    }
+                  }
+                },
+                "kd_sigma": {
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "range": {
+                      "type": "float_range"
+                    },
+                    "vals": {
+                      "type": "object",
+                      "enabled": false
+                    }
+                  }
+                },
+                "kd_low": {
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "range": {
+                      "type": "float_range"
+                    },
+                    "vals": {
+                      "type": "object",
+                      "enabled": false
+                    }
+                  }
+                },
+                "kd_high": {
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "range": {
+                      "type": "float_range"
+                    },
+                    "vals": {
+                      "type": "object",
+                      "enabled": false
+                    }
+                  }
+                },
+                "kd_definition": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "kd_types": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

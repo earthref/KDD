@@ -1,0 +1,27 @@
+# Node
+node_modules
+npm-debug.log*
+
+# Scripts
+.scripts/elasticsearch/.*
+
+# Babel Distribution Files
+.dist
+
+# Settings
+settings.json
+
+# JetBrains
+.idea
+
+earthref.ssl.key
+
+# Mac System Files
+*.DS_Store
+
+# Jarboe extra files
+client/modules/kdd/components/menuTemplate.jsx
+client/modules/kdd/components/templateBasic.jsx
+client/modules/kdd/components/templateResource.jsx
+client/modules/kdd/components/faq.jsx
+

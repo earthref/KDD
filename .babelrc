@@ -1,0 +1,8 @@
+{
+  "ignore": [
+    "*.es5.js",
+    "/client/lib/modules/kdd/data_models/*",
+    "/client/lib/semantic-ui/*",
+    ".scripts/mocha_boot.js"
+  ]
+}
