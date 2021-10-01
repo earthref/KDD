@@ -211,7 +211,7 @@ class Search extends React.Component {
     $(this.refs['age_max_unit']).dropdown({ onChange: function (value, text) { self.setState({age_max_unit: text}); } });
     $(this.refs['int_unit']).dropdown({ onChange: function (value, text) { self.setState({int_unit: text}); } });
     window.addEventListener("resize", this.onWindowResize.bind(this));
-    this.onWindowResize();
+    _.delay(() => $(window).trigger('resize'), 500);
   }
 
   componentWillUnmount() {
@@ -1153,28 +1153,69 @@ class Search extends React.Component {
         <div className="ui small accordion">
           <div className='title' style={{paddingBottom: 0}}>
             <div style={this.styles.flex}
-                onClick={() => $(this.refs[filter.name + '_content']).modal({ dimmerSettings: { variation: 'inverted' }}).modal('show')}>
+                onClick={() => $(this.refs[filter.name + '_content']).modal({ dimmerSettings: { variation: 'inverted' }}).modal('show')}
+            >
               <i className="dropdown icon"/>
               <div style={_.extend({}, this.styles.flexGrow, this.styles.b)}>
                 Periodic Table of Elements
               </div>
             </div>
+            {this.state.activeBucketsFilters['summary.kds.periodic_table'] && 
+              this.state.activeBucketsFilters['summary.kds.periodic_table'].sort().map(x =>
+                <div key={x}
+                  style={_.extend({}, this.styles.flex, this.styles.click)}
+                  onClick={() => $(this.refs[filter.name + '_content']).modal({ dimmerSettings: { variation: 'inverted' }}).modal('show')}
+                >
+                  <div className="ui checkbox" style={{ minWidth: 22, maxWidth: 22 }}>
+                    <input type="checkbox" checked/>
+                    <label/>
+                  </div>
+                  <div style={_.extend({}, this.styles.flexGrow, this.styles.click, this.styles.b)}>
+                    {x}
+                  </div>
+                  <div>
+                    <span className="ui circular small basic label">
+                      {this.state.elementCounts[x] || '0'}
+                    </span>
+                  </div>
+                </div>
+              )
+            }
           </div>
         </div>
-        <div ref={filter.name + '_content'} className="ui modal" style={{ width: '90vw' }}>
+        <div ref={filter.name + '_content'} className="ui modal" style={{ minWidth: 940, maxWidth: '90vw' }}>
           <div className="header">
             Periodic Table of Elements
           </div>
           <div className="content" style={{ minHeight: '50vh', overflow: 'scroll' }}>
             { _.keys(this.state.elementCounts).length == 0 ? <div className="ui loader active"/> : (
-              <table>
+              <table><tbody>
                 { [...Array(10).keys()].map(j => <tr key={`${j}`}>
                   { [...Array(18).keys()].map(i => <td key={`${i} ${j}`}>
                     { elementsByPosition[i+1] && elementsByPosition[i+1][j+1] && 
-                      <div class={'ui button' + (this.state.elementCounts[elementsByPosition[i+1][j+1].name] ? '' : ' disabled')} style={{
+                      <div class={'ui button' + 
+                        (this.state.elementCounts[elementsByPosition[i+1][j+1].name] ? '' : ' disabled') + 
+                        (this.state.activeBucketsFilters['summary.kds.periodic_table'] && 
+                          this.state.activeBucketsFilters['summary.kds.periodic_table'].includes(elementsByPosition[i+1][j+1].name) ?
+                          ' ' + portals['GERM'].color : '')
+                      } style={{
                         position: 'relative',
                         /* backgroundColor: elementsByPosition[i+1][j+1]['cpk-hex'] && `#${elementsByPosition[i+1][j+1]['cpk-hex']}` || undefined, */
-                        width: '3rem', height: '4.5rem', padding: '1rem 0'}}>
+                        width: '3rem', height: '4.5rem', padding: '1rem 0'}}
+                        onClick={() => {
+                          const filterName = 'summary.kds.periodic_table';
+                          const element = elementsByPosition[i+1][j+1].name;
+                          let activeBucketsFilters = _.cloneDeep(this.state.activeBucketsFilters);
+                          console.log(this.state.activeBucketsFilters[filterName], activeBucketsFilters[filterName]);
+                          activeBucketsFilters[filterName] = activeBucketsFilters[filterName] || [];
+                          if (activeBucketsFilters[filterName].includes(element))
+                            activeBucketsFilters[filterName] = activeBucketsFilters[filterName].filter(x => x !== element);
+                          else
+                            activeBucketsFilters[filterName].push(element);
+                          console.log(this.state.activeBucketsFilters[filterName], activeBucketsFilters[filterName]);
+                          this.setState({activeBucketsFilters});
+                        }}
+                      >
                         { elementsByPosition[i+1][j+1].symbol }
                         <div class="ui bottom attached mini basic label">
                           {this.state.elementCounts[elementsByPosition[i+1][j+1].name] || '0'}
@@ -1183,15 +1224,23 @@ class Search extends React.Component {
                     }
                   </td>) }
                 </tr>) }
-              </table>
+              </tbody></table>
             )}
           </div>
           <div className="actions">
-            <div className="ui button">
-              Cancel
+            <div className="ui button"
+              onClick={() => {
+                let activeBucketsFilters = _.cloneDeep(this.state.activeBucketsFilters);
+                delete activeBucketsFilters['summary.kds.periodic_table'];
+                this.setState({activeBucketsFilters});
+              }}
+            >
+              Clear
             </div>
-            <div className={portals['GERM'].color + ' ui button'}>
-              Apply
+            <div className={portals['GERM'].color + ' ui button'} 
+              onClick={() => $(this.refs[filter.name + '_content']).modal('hide')}
+            >
+              Close
             </div>
           </div>
         </div>
