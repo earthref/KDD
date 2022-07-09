@@ -36,6 +36,7 @@ const searchTerms = {
   "private_key": { field: 'summary.contribution._private_key', processor: x => x },
   "doi":         { field: 'summary.contribution._reference.doi.raw', processor: x => _.toUpper(_.trim(x)) },
   "orcid":       { field: 'summary.contribution._reference.authors._orcid.raw', processor: x => x },
+  "element":     { field: 'summary.kds._element_name.raw', processor: x => x },
 };
 /*const searchMatches = {
   "author":      'summary.contribution._reference.authors.family',

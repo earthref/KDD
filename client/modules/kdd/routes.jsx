@@ -29,7 +29,7 @@ import KdDUpgradeContribution from '/client/modules/kdd/components/upgrade_contr
 import KdDUploadContribution from '/client/modules/kdd/components/upload_contribution';
 import KdDPrivateContributions from '/client/modules/kdd/components/private_contributions';
 import KdDDataModel from '/client/modules/kdd/components/data_model';
-import KdDMethodCodes from '/client/modules/kdd/components/method_codes';
+import { elements } from '/lib/configs/kdd/elements.js';
 
 import KdDValidateContribution from '/client/modules/kdd/components/validate_contribution';
 import Error from '/client/modules/common/components/error';
@@ -162,6 +162,14 @@ const Routes = ({match}) => (
         pathname: "/KdD/search", 
         state: {
           search: `doi:"${match.params.doi}" ` + location.search || ""
+        }
+      }}/>
+    }/>
+    <Route exact path="/KdD/e::element(.+)" render={({match, location}) =>
+      <Redirect to={{
+        pathname: "/KdD/search", 
+        state: {
+          search: `element:"${elements.filter(x => x.number == match.params.element).length && elements.filter(x => x.number == match.params.element)[0].name}" ` + location.search || ""
         }
       }}/>
     }/>
