@@ -1,18 +1,13 @@
 import _ from 'lodash';
 import numeral from 'numeral';
 import moment from 'moment';
-import request from 'request';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
 import saveAs from 'save-as';
 
 import Clamp from '/client/modules/common/components/clamp';
-import ParseContribution from '/lib/modules/kdd/parse_contribution.js';
 import ExportContribution from '/lib/modules/kdd/export_contribution.js';
-import GoogleStaticMap from '/client/modules/common/components/google_static_map';
 import GoogleMap from '/client/modules/common/components/google_map';
-import SearchPlotThumbnail from '/client/modules/kdd/containers/search_plot_thumbnail';
 import {index} from '/lib/configs/kdd/search_levels.js';
 
 class SearchSummariesListItem extends React.Component {
@@ -91,8 +86,10 @@ class SearchSummariesListItem extends React.Component {
             style={{padding: '20px 0', height: '100px'}} onClick={function (id, e) {
               document.getElementById('downloadButton' + id).className = "ui spinner loading icon";
               Meteor.call('esGetContribution', {index, id}, function (id, error, c) {
+                // console.log("esGetContribution", index, id, error, c);
                 if (!error && c) {
                   const exporter = new ExportContribution({});
+                  // console.log("esGetContribution", index, id, c, exporter.toText(c));
                   let blob = new Blob([exporter.toText(c)], {type: "text/plain;charset=utf-8"});
                   saveAs(blob, 'kdd_contribution_' + id + '.txt');
                   document.getElementById('downloadButton' + id).className = "ui file text outline icon";

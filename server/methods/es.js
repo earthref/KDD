@@ -9,7 +9,7 @@ import uuid from "uuid";
 import moment from "moment";
 import bcrypt from "bcrypt";
 import sizeof from "object-sizeof";
-import elasticsearch from "elasticsearch";
+import opensearch from "@opensearch-project/opensearch";
 
 import ExportContribution from '/lib/modules/kdd/export_contribution.js';
 import SummarizeContribution from '/lib/modules/kdd/summarize_contribution.js';
@@ -21,16 +21,16 @@ import { resolveTxt } from 'dns';
 
 const saltRounds = 10;
 
-const esClient = new elasticsearch.Client({
+const esClient = new opensearch.Client({
   //log: "trace",
-  host: Meteor.settings.elasticsearch && Meteor.settings.elasticsearch.url || "",
+  node: Meteor.settings.opensearch && Meteor.settings.opensearch.node || "",
   keepAlive: false,
   apiVersion: '6.8',
   requestTimeout: 60 * 60 * 1000 // 1 hour
 });
 
 //const erUsersIndex = Meteor.isDevelopment ? 'er_users_v1_sandbox' : 'er_users_v1';
-const erUsersIndex = Meteor.isDevelopment ? 'er_users_v1' : 'er_users_v1';
+const erUsersIndex = Meteor.isDevelopment ? 'er_users' : 'er_users';
 
 export default function () {
 
@@ -71,7 +71,7 @@ export default function () {
           "type": '_doc',
           "body": search
         });
-        return resp.aggregations.buckets ? _.reverse(_.sortBy(resp.aggregations.buckets.buckets, ["doc_count"])) : resp.aggregations;
+        return resp.body.aggregations.buckets ? _.reverse(_.sortBy(resp.body.aggregations.buckets.buckets, ["doc_count"])) : resp.body.aggregations;
 
       } catch(error) {
         console.error("esBuckets", index, type, queries, error.message);
@@ -126,7 +126,7 @@ export default function () {
             "type": '_doc',
             "body": search
           });
-        let count = _.trim(countField) !== "" ? resp.aggregations.count.value : resp.count;
+        let count = _.trim(countField) !== "" ? resp.body.aggregations.count.value : resp.body.count;
 
         // console.log("esCount hits:", count);
         return count;
@@ -169,7 +169,7 @@ export default function () {
         if (_.isArray(queries)) search.query.bool.must.push(...queries);
         if (_.isArray(filters)) search.query.bool.filter.push(...filters);
 
-        // console.log("esPage search:", JSON.stringify(search));
+        console.log("esPage search:", JSON.stringify(search));
         search.query.bool.filter.push({ term: { type }});
         let resp = await esClient.search({
           "index": index,
@@ -177,8 +177,8 @@ export default function () {
           "body": search,
           "timeout": "60s"
         });
-        // console.log("esPage hits:", resp.hits.total);
-        return resp.hits.hits.map(hit => hit._source);
+        console.log("esPage resp:", resp);
+        return resp.body.hits.hits.map(hit => hit._source);
 
       } catch(error) {
         console.error("esPage", index, type, queries, filters, source, sort, pageSize, pageNumber, error.message);
@@ -283,7 +283,7 @@ export default function () {
           "type": "_doc",
           "body": search
         });
-        return resp.aggregations.buckets.buckets.map((id) => id.key);
+        return resp.body.aggregations.buckets.buckets.map((id) => id.key);
 
       } catch(error) {
         console.error("esContributionIDs", index, queries, filters, error.message);
@@ -315,9 +315,9 @@ export default function () {
             }]
           }
         });
-        if (isNaN(_.parseInt(next_id.hits.hits[0]._source.summary.contribution.id)))
+        if (isNaN(_.parseInt(next_id.body.hits.hits[0]._source.summary.contribution.id)))
           throw new Error('Failed to retrieve new contribution ID.');
-        next_id = _.parseInt(next_id.hits.hits[0]._source.summary.contribution.id) + 1;
+        next_id = _.parseInt(next_id.body.hits.hits[0]._source.summary.contribution.id) + 1;
 
         let timestamp = moment().utc().toISOString();
         let contributionSummary = {
@@ -417,7 +417,7 @@ export default function () {
           "refresh": true,
           "retryOnConflict": 5,
           "body": {
-            "doc": { summary, contribution }
+            "doc": { summary, contribution, type: "contribution" }
           }
         });
       } catch(error) {
@@ -465,11 +465,11 @@ export default function () {
               }
             }
           });
-          if (resp.hits.total > 0) {
-            if (resp.hits.hits[0]._source.contribution && _.isPlainObject(resp.hits.hits[0]._source.contribution.contribution))
-              resp.hits.hits[0]._source.contribution.contribution = [resp.hits.hits[0]._source.contribution.contribution];
-            contribution = resp.hits.hits[0]._source.contribution;
-            summary.contribution = resp.hits.hits[0]._source.summary.contribution;
+          if (resp.body.hits.total.value > 0) {
+            if (resp.body.hits.hits[0]._source.contribution && _.isPlainObject(resp.body.hits.hits[0]._source.contribution.contribution))
+              resp.body.hits.hits[0]._source.contribution.contribution = [resp.body.hits.hits[0]._source.contribution.contribution];
+            contribution = resp.body.hits.hits[0]._source.contribution;
+            summary.contribution = resp.body.hits.hits[0]._source.summary.contribution;
           }
         //}
 
@@ -573,12 +573,12 @@ export default function () {
               }
             }
           });
-          if (resp.hits.total > 0) {
-            if (resp.hits.hits[0]._source.contribution && _.isPlainObject(resp.hits.hits[0]._source.contribution.contribution))
-              resp.hits.hits[0]._source.contribution.contribution = [resp.hits.hits[0]._source.contribution.contribution];
-            contribution = resp.hits.hits[0]._source.contribution;
-            if (resp.hits.hits[0]._source.summary)
-              summary.contribution = resp.hits.hits[0]._source.summary.contribution;
+          if (resp.body.hits.total.value > 0) {
+            if (resp.body.hits.hits[0]._source.contribution && _.isPlainObject(resp.body.hits.hits[0]._source.contribution.contribution))
+              resp.body.hits.hits[0]._source.contribution.contribution = [resp.body.hits.hits[0]._source.contribution.contribution];
+            contribution = resp.body.hits.hits[0]._source.contribution;
+            if (resp.body.hits.hits[0]._source.summary)
+              summary.contribution = resp.body.hits.hits[0]._source.summary.contribution;
           }
         //}
   
@@ -686,7 +686,7 @@ export default function () {
             }]
           }
         });
-        return resp.hits.hits.map(hit => hit._source);
+        return resp.body.hits.hits.map(hit => hit._source);
 
       } catch(error) {
         console.error("esGetPrivateContributionSummaries", index, contributor, error.message);
@@ -732,7 +732,7 @@ export default function () {
             }
           }
         });
-        return resp.hits.total > 0 && resp.hits.hits[0]._source;
+        return resp.body.hits.total.value > 0 && resp.body.hits.hits[0]._source;
 
       } catch(error) {
         console.error("esGetPrivateContributionSummary", index, id, contributor, error.message);
@@ -767,9 +767,10 @@ export default function () {
             }
           }
         });
-        if (resp.hits.total > 0 && resp.hits.hits[0]._source.contribution && _.isPlainObject(resp.hits.hits[0]._source.contribution.contribution))
-          resp.hits.hits[0]._source.contribution.contribution = [resp.hits.hits[0]._source.contribution.contribution];
-        return resp.hits.total > 0 && resp.hits.hits[0]._source.contribution;
+        // console.log("esGetContribution", index, id, resp.body.hits);
+        if (resp.body.hits.total.value > 0 && resp.body.hits.hits[0]._source.contribution && _.isPlainObject(resp.body.hits.hits[0]._source.contribution.contribution))
+          resp.body.hits.hits[0]._source.contribution.contribution = [resp.body.hits.hits[0]._source.contribution.contribution];
+        return resp.body.hits.total.value > 0 && resp.body.hits.hits[0]._source.contribution;
 
       } catch(error) {
         console.error("esGetContribution", index, id, error.message);
@@ -831,8 +832,8 @@ export default function () {
             }
           }
         });
-        if (resp.hits.total > 0) {
-          let _history = resp.hits.hits[0]._source.summary.contribution._history;
+        if (resp.body.hits.total.value > 0) {
+          let _history = resp.body.hits.hits[0]._source.summary.contribution._history;
           _history[0].description = description;
           resp = await esClient.updateByQuery({
             "index": index,
@@ -962,9 +963,9 @@ export default function () {
             }
           }
         });
-        if (resp.hits.total > 0) {
-          _history[0].version = parseInt(resp.hits.hits[0]._source.summary.contribution._history[0].version) + 1;
-          _history.push(...resp.hits.hits[0]._source.summary.contribution._history);
+        if (resp.body.hits.total.value > 0) {
+          _history[0].version = parseInt(resp.body.hits.hits[0]._source.summary.contribution._history[0].version) + 1;
+          _history.push(...resp.body.hits.hits[0]._source.summary.contribution._history);
         } else {
           _history[0].version = 1;
         }
@@ -1063,10 +1064,10 @@ export default function () {
             }
           }
         });
-        if (resp.hits.total > 0 && resp.hits.hits[0]._source.contribution && _.isPlainObject(resp.hits.hits[0]._source.contribution.contribution))
-          resp.hits.hits[0]._source.contribution.contribution = [resp.hits.hits[0]._source.contribution.contribution];
+        if (resp.body.hits.total.value > 0 && resp.body.hits.hits[0]._source.contribution && _.isPlainObject(resp.body.hits.hits[0]._source.contribution.contribution))
+          resp.body.hits.hits[0]._source.contribution.contribution = [resp.body.hits.hits[0]._source.contribution.contribution];
               
-        await validator.validatePromise(resp.hits.hits[0]._source.contribution);
+        await validator.validatePromise(resp.body.hits.hits[0]._source.contribution);
 
         await esClient.update({
           "index": index,
@@ -1147,10 +1148,10 @@ export default function () {
             }
           }
         });
-        if (resp.hits.total > 0 && resp.hits.hits[0]._source.summary)
-          contributionSummary = resp.hits.hits[0]._source.summary.contribution;
-        if (resp.hits.total > 0 && resp.hits.hits[0]._source.summary.contribution._history.length > 1) {
-          prev_id = resp.hits.hits[0]._source.summary.contribution._history[1].id;
+        if (resp.body.hits.total.value > 0 && resp.body.hits.hits[0]._source.summary)
+          contributionSummary = resp.body.hits.hits[0]._source.summary.contribution;
+        if (resp.body.hits.total.value > 0 && resp.body.hits.hits[0]._source.summary.contribution._history.length > 1) {
+          prev_id = resp.body.hits.hits[0]._source.summary.contribution._history[1].id;
           await esClient.updateByQuery({
             "index": index,
             "refresh": true,
@@ -1224,9 +1225,9 @@ export default function () {
             }
           }
         });
-        const contribution = resp.hits.hits[0]._source.contribution;
-        const history = resp.hits.hits[0]._source.summary.contribution._history;
-        const isLatest = resp.hits.hits[0]._source.summary.contribution._is_latest;
+        const contribution = resp.body.hits.hits[0]._source.contribution;
+        const history = resp.body.hits.hits[0]._source.summary.contribution._history;
+        const isLatest = resp.body.hits.hits[0]._source.summary.contribution._is_latest;
         const exporter = new ExportContribution({});
         const contributionText = exporter.toText(contribution);
         //console.log("esUploadActivatedContributionToS3", id, isLatest, contribution, contributionText);
@@ -1308,8 +1309,8 @@ export default function () {
             }
           }
         });
-        if (resp.hits.total > 0 && resp.hits.hits[0]._source.summary.contribution._history.length > 1) {
-          prev_id = resp.hits.hits[0]._source.summary.contribution._history[1].id;
+        if (resp.body.hits.total.value > 0 && resp.body.hits.hits[0]._source.summary.contribution._history.length > 1) {
+          prev_id = resp.body.hits.hits[0]._source.summary.contribution._history[1].id;
           await esClient.updateByQuery({
             "index": index,
             "refresh": true,
@@ -1363,11 +1364,11 @@ export default function () {
             "query": { "term": { "email.address.raw": email.toLowerCase() }}
           }
         });
-        if (resp.hits.total === 0) {
+        if (resp.body.hits.total.value === 0) {
           throw new Meteor.Error("Email", "Unrecognized email address.");
         }
         let user;
-        resp.hits.hits.forEach(hit => {
+        resp.body.hits.hits.forEach(hit => {
           if (!user && password && hit._source._password &&
             bcrypt.compareSync(password, hit._source._password)
           ) {
@@ -1398,7 +1399,8 @@ export default function () {
             "query": { "term": { "id": id }}
           }
         });
-        let user = resp.hits.total > 0 ? resp.hits.hits[0]._source : undefined;
+        // console.log('esGetUserByID', resp);
+        let user = resp.body.hits.total.value > 0 ? resp.body.hits.hits[0]._source : undefined;
         user = __.omitDeep(user, /(^|\.)_/);
         user.handle = (user && user.handle) || `user${user.id}`;
         if (user && session && session.id) {
@@ -1419,7 +1421,7 @@ export default function () {
         }
         return user;
       } catch(error) {
-        console.error("esGetUserByID", id, error.message);
+        // console.error("esGetUserByID", id, error.message);
         throw new Meteor.Error("User ID", `Unrecognized user ID ${id}.`);
       }
     },
@@ -1435,8 +1437,8 @@ export default function () {
             "query": { "term": { "orcid.id.raw": orcid }}
           }
         });
-        if (resp.hits.total === 0) return undefined;
-        const user = __.omitDeep(resp.hits.hits[0]._source, /(^|\.)_/);
+        if (resp.body.hits.total.value === 0) return undefined;
+        const user = __.omitDeep(resp.body.hits.hits[0]._source, /(^|\.)_/);
         user.handle = user.handle || `user${user.id}`;
         return user;
       } catch(error) {
@@ -1456,8 +1458,8 @@ export default function () {
             "sort": { "id": "desc" }
           }
         });
-        if (resp.hits.total === 0) return undefined;
-        const users = resp.hits.hits.map(hit => {
+        if (resp.body.hits.total.value === 0) return undefined;
+        const users = resp.body.hits.hits.map(hit => {
           const user = __.omitDeep(hit._source, /(^|\.)_/);
           user.handle = user.handle || `user${user.id}`;
           return user;
@@ -1480,7 +1482,7 @@ export default function () {
             "sort": { "id": "desc" }
           }
         });
-        let user = resp.hits.total > 0 ? resp.hits.hits[0]._source : undefined;
+        let user = resp.body.hits.total.value > 0 ? resp.body.hits.hits[0]._source : undefined;
         user = __.omitDeep(user, /(^|\.)_/);
         user.handle = user.handle || `user${user.id}`;
         return user;
@@ -1505,7 +1507,7 @@ export default function () {
             "sort": { "id": "desc" }
           }
         });
-        if (resp.hits.total === 0)
+        if (resp.body.hits.total.value === 0)
           return handle;
         for (x of [...Array(1000).keys()]) {
           resp = await esClient.search({
@@ -1517,7 +1519,7 @@ export default function () {
               "sort": { "id": "desc" }
             }
           });
-          if (resp.hits.total === 0)
+          if (resp.body.hits.total.value === 0)
             return handle + (x+1);
         }
       } catch(error) {
@@ -1541,7 +1543,7 @@ export default function () {
             "sort": { "id": "desc" }
           }
         });
-        return parseInt(resp.hits.hits[0]._id) + 1;
+        return parseInt(resp.body.hits.hits[0]._id) + 1;
       } catch(error) {
         console.error("esNextAvailableUserID", error.message);
         throw new Meteor.Error("esNextAvailableUserID", "Failed to calculate the next available user ID.");

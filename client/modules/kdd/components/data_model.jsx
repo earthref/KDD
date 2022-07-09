@@ -4,7 +4,6 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import saveAs from 'save-as';
 
-import Upgrader from '/lib/modules/kdd/upgrade_contribution.js';
 import DataModelColumn from '/client/modules/kdd/components/data_model_column';
 import {portals} from '/lib/configs/portals.js';
 import {versions, models} from '/lib/configs/kdd/data_models.js';
@@ -21,7 +20,6 @@ class DataModel extends React.Component {
     };
     this.dataModelColumnCache = {};
     this.changeLogCache = {};
-    this.upgrader = new Upgrader({});
   }
 
   componentDidMount() {
@@ -211,7 +209,6 @@ class DataModel extends React.Component {
     // Add the DataModelColumn component to the cache if necessary.
     if (!this.changeLogCache[version]) {
       let changeLog = {};
-      let upgradeMap = this.upgrader.getUpgradeMap(models[version]);
       changeLog['new'];
       this.changeLogCache[version] = changeLog;
     }
@@ -236,10 +233,6 @@ class DataModel extends React.Component {
     let previousVersion;
     if (_.indexOf(versions, version) > 0)
       previousVersion = versions[_.indexOf(versions, version)-1];
-    let upgradeMap;
-    if (previousVersion)
-      upgradeMap = this.cachedChangeLog();
-    console.log(upgradeMap);
     return (
       <div className="data-model">
         <div className="ui top attached tabular menu">
@@ -353,66 +346,6 @@ class DataModel extends React.Component {
               );
             })}
           </div>
-          {(false && upgradeMap ?
-            <div>
-              <h4 className="ui horizontal divider header">
-                <i className="random icon"></i>
-                <span className="content">
-                  Change Log
-                </span>
-              </h4>
-              <div className="ui styled fluid accordion">
-                <div className="title">
-                  <i className="dropdown icon"/>
-                  <span>
-                    New Columns
-                  </span>
-                  <div className="ui circular small basic label data-model-table-count">
-                    {0}
-                  </div>
-                  <span className="description">in MagIC Data Model version {version}</span>
-                </div>
-                <div className="content">
-                </div>
-                <div className="title">
-                  <i className="dropdown icon"/>
-                  <span>
-                    Removed Columns
-                  </span>
-                  <div className="ui circular small basic label data-model-table-count">
-                    {0}
-                  </div>
-                  <span className="description">from MagIC Data Model version {previousVersion}</span>
-                </div>
-                <div className="content">
-                </div>
-                <div className="title">
-                  <i className="dropdown icon"/>
-                  <span>
-                    Renamed Columns
-                  </span>
-                  <div className="ui circular small basic label data-model-table-count">
-                    {0}
-                  </div>
-                  <span className="description">from MagIC Data Model version {previousVersion} to {version}</span>
-                </div>
-                <div className="content">
-                </div>
-                <div className="title">
-                  <i className="dropdown icon"/>
-                  <span>
-                    Merged Columns
-                  </span>
-                  <div className="ui circular small basic label data-model-table-count">
-                    {0}
-                  </div>
-                  <span className="description">from MagIC Data Model version {previousVersion} to {version}</span>
-                </div>
-                <div className="content">
-                </div>
-              </div>
-            </div>
-          : undefined)}
         </div>
         <div ref="no-match-message" className="ui hidden error bottom attached message">
           No columns match your search. Please edit the search string.

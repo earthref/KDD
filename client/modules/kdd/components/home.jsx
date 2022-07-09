@@ -51,20 +51,13 @@ export default class extends React.Component {
           <h2 className="ui horizontal divider header" style={{marginBottom: 0}}>
             KdD Resources
           </h2>
-          <div className="ui three cards" style={{marginTop: 0}}>
+          <div className="ui two cards" style={{marginTop: 0}}>
             <IconButton className="borderless card" link="/KdD/data-models/1.0" portal="GERM">
               <i className="icons">
                 <i className="sitemap icon"/>
                 <i className="corner table icon"/>
               </i>
               <div className="small title">Data<br/>Models</div>
-            </IconButton>
-            <IconButton className="borderless card" link="/KdD/method-codes" portal="GERM">
-              <i className="icons">
-                <i className="lab icon"/>
-                <i className="corner write icon"/>
-              </i>
-              <div className="small title">Method<br/>Codes</div>
             </IconButton>
             <IconButton className="borderless card" link="/vocabularies" portal="GERM">
               <i className="icons">

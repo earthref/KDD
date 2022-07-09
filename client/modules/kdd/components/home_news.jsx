@@ -10,7 +10,7 @@ export default class extends React.Component {
     return (
       <div style={{textAlign: "justify"}}>
         <h3>
-          <Image size="mini" src="/KdD/FIESTA.png" floated="left"/>
+          <Image size="mini" src="/KdD/FIESTA small.png" floated="left"/>
           {` EarthRef FIESTA`}
         </h3>
         <p>

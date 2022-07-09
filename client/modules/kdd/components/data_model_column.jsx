@@ -4,8 +4,6 @@ import {Link} from 'react-router-dom';
 import {versions, models} from '/lib/configs/kdd/data_models';
 import {cvs} from '/lib/modules/er/controlled_vocabularies';
 import {svs} from '/lib/modules/er/suggested_vocabularies';
-import {codes} from '/lib/configs/kdd/method_codes';
-
 export default class extends React.Component {
 
   constructor(props) {

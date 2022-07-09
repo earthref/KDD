@@ -97,9 +97,9 @@ export default class extends React.Component {
               }));
             processedHits++;
           });
-          console.log('SearchDownload', processedHits, results.hits.total);
-          this.setState({progress: Math.floor(100*processedHits/results.hits.total)});
-          if (results.hits.total > processedHits)
+          console.log('SearchDownload', processedHits, results.hits.total.value);
+          this.setState({progress: Math.floor(100*processedHits/results.hits.total.value)});
+          if (results.hits.total.value > processedHits)
             Meteor.call('esScrollByID', results._scroll_id, processResults);
           else if (this.state.format === "text") {
             const exporter = new ExportContribution({});

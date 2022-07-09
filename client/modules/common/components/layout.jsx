@@ -139,7 +139,7 @@ class Layout extends React.Component {
               <a className={'ui button compact basic ' + portals['EarthRef.org'].color} style={{margin: '0.5em 1em'}}
                  href="https://earthref.org/FIESTA">
                  Powered by
-                 <img src="/KdD/FIESTA.png" style={{ height: '1.75em', margin: '-1.25em 0.5em -.5em' }}/>
+                 <img src="/KdD/FIESTA small.png" style={{ height: '1.75em', margin: '-1.25em 0.5em -.5em' }}/>
                 <b>FIESTA</b>
               </a>
             </div>

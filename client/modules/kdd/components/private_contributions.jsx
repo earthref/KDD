@@ -282,7 +282,7 @@ export default class extends React.Component {
             <i className="edit icon"/> In Preparation
             <div className="ui circular small basic label" style={{color: '#0C0C0C', margin: '-1em -0.5em -1em 0.5em', minWidth: '4em'}}>
               <Count
-                es={{ index: 'kdd_v1', type: 'contribution', allVersions: true, filters: [
+                es={{ index: 'kdd', type: 'contribution', allVersions: true, filters: [
                   {"term": { "summary.contribution.contributor.raw": "@" + Cookies.get("user_id", Meteor.isDevelopment ? {} : { domain: '.earthref.org'}) }},
                   {"term": { "summary.contribution._is_activated": "false" }}
                 ] }}
@@ -293,7 +293,7 @@ export default class extends React.Component {
             <i className="clipboard check icon"/> Made Public
             <div className="ui circular small basic label" style={{color: '#0C0C0C', margin: '-1em -0.5em -1em 0.5em', minWidth: '4em'}}>
               <Count
-                es={{ index: 'kdd_v1', type: 'contribution', allVersions: true, filters: [
+                es={{ index: 'kdd', type: 'contribution', allVersions: true, filters: [
                   {"term": { "summary.contribution.contributor.raw": "@" + Cookies.get("user_id", Meteor.isDevelopment ? {} : { domain: '.earthref.org'}) }},
                   {"term": { "summary.contribution._is_activated": "true" }}
                 ] }}
@@ -377,7 +377,7 @@ export default class extends React.Component {
                         <Dropdown multiple selection
                           defaultValue={
                             (c.lab_names && c.lab_names.split(":")) ||
-                            (c.summary.contribution.lab_names && c.summary.contribution.lab_names.split(":")) ||
+                            (c.summary.contribution.lab_names && c.summary.contribution.lab_names.split && c.summary.contribution.lab_names.split(":")) ||
                             ""
                           }
                           placeholder="Select one or more laboratories where the measurements in the contribution were made"

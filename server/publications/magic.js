@@ -3,11 +3,14 @@ import Fiber from 'fibers';
 import {Collections, collectionDefinitions} from '/lib/collections';
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
-import elasticsearch from 'elasticsearch';
+import opensearch from "@opensearch-project/opensearch";
 
-const esClient = new elasticsearch.Client({
-  //log: 'trace',
-  host: Meteor.settings.elasticsearch && Meteor.settings.elasticsearch.url || ''
+const esClient = new opensearch.Client({
+  //log: "trace",
+  node: Meteor.settings.opensearch && Meteor.settings.opensearch.node || "",
+  keepAlive: false,
+  apiVersion: '6.8',
+  requestTimeout: 60 * 60 * 1000 // 1 hour
 });
 
 export default function () {
@@ -22,11 +25,10 @@ export default function () {
           query: {
             bool: {
               must: [],
-              filter: [{
-                term: {
-                  "summary.contribution._is_latest": "t"
-                }
-              }]
+              filter: [
+                { term: { type: definition.type } },
+                { term: { "summary.contribution._is_latest": "t" } }
+              ] 
             }
           },
           aggs : definition.aggs
@@ -41,7 +43,6 @@ export default function () {
         let publishedKeys = {};
         esClient.search({
           index: definition.index,
-          type: definition.type,
           body: search
         }).then((resp) => {
           resp.aggregations.buckets.buckets.forEach((bucket) => {
@@ -73,11 +74,10 @@ export default function () {
           query: {
             bool: {
               must: [],
-              filter: [{
-                term: {
-                  "summary.contribution._is_latest": "t"
-                }
-              }]
+              filter: [
+                { term: { type: definition.type } },
+                { term: { "summary.contribution._is_latest": "t" } }
+              ]
             }
           }
         };
@@ -90,7 +90,6 @@ export default function () {
 
         esClient.search({
           index: definition.index,
-          type: definition.type,
           body: search
         }).then((resp) => {
           this.added(definition.recordSet, 'id', {count: resp.hits.total});
@@ -113,11 +112,10 @@ export default function () {
           query: {
             bool: {
               must: [],
-              filter: [{
-                term: {
-                  "summary.contribution._is_latest": "t"
-                }
-              }]
+              filter: [
+                { term: { type: definition.type } },
+                { term: { "summary.contribution._is_latest": "t" } }
+              ]
             }
           },
           aggs: {
@@ -138,7 +136,6 @@ export default function () {
 
         esClient.search({
           index: definition.index,
-          type: definition.type,
           body: search
         }).then((resp) => {
           this.added(definition.recordSet, 'id', {count: resp.aggregations.sum.value});
@@ -166,11 +163,10 @@ export default function () {
           query: {
             bool: {
               must: [],
-              filter: [{
-                term: {
-                  "summary.contribution._is_latest": "t"
-                }
-              }]
+              filter: [
+                { term: { type: definition.type } },
+                { term: { "summary.contribution._is_latest": "t" } }
+              ]
             }
           }
         };

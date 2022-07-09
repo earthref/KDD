@@ -9,15 +9,11 @@ import SearchFiltersBuckets from '/client/modules/common/containers/search_filte
 import SearchFiltersExists from '/client/modules/common/containers/search_filters_exists';
 import SearchSummariesView from '/client/modules/kdd/components/search_summaries_view';
 import SearchRowsView from '/client/modules/kdd/containers/search_rows_view';
-import SearchMapView from '/client/modules/kdd/components/search_map_view';
-import SearchImagesView from '/client/modules/kdd/components/search_images_view';
 import SearchDownload from '/client/modules/kdd/components/search_download';
 import SearchJSONLD from '/client/modules/kdd/containers/search_jsonld';
 import {portals} from '/lib/configs/portals.js';
 import {versions, models} from '/lib/configs/kdd/data_models.js';
 import {levels, index} from '/lib/configs/kdd/search_levels.js';
-import {cvs} from '/lib/modules/er/controlled_vocabularies';
-import {methodCodes} from '/lib/configs/kdd/method_codes.js';
 import {elements} from '/lib/configs/kdd/elements.js';
 
 const elementsByPosition = {};
@@ -1145,10 +1141,8 @@ class Search extends React.Component {
     }, (error, data) => {
       let elementCounts = {};
       data.forEach(e => elementCounts[e.key] = e.doc_count);
-      console.log(elementCounts);
       this.setState({ elementCounts });
     });
-    console.log('elementCounts', this.state.elementCounts, _.keys(this.state.elementCounts).length);
     return (
       <div key={i + '_' + this.state.filtersTap} style={this.styles.filter}>
         <div className="ui small accordion">
@@ -1184,7 +1178,7 @@ class Search extends React.Component {
             }
           </div>
         </div>
-        <div ref={filter.name + '_content'} className="ui modal" style={{ minWidth: 940, maxWidth: '90vw' }}>
+        <div ref={filter.name + '_content'} className="ui modal" style={{ minWidth: 'calc(min(90vw, 940px))', maxWidth: '90vw' }}>
           <div className="header">
             Periodic Table of Elements
           </div>
@@ -1194,20 +1188,20 @@ class Search extends React.Component {
                 { [...Array(10).keys()].map(j => <tr key={`${j}`}>
                   { [...Array(18).keys()].map(i => <td key={`${i} ${j}`}>
                     { elementsByPosition[i+1] && elementsByPosition[i+1][j+1] && 
-                      <div class={'ui button' + 
-                        (this.state.elementCounts[elementsByPosition[i+1][j+1].name] ? '' : ' disabled') + 
-                        (this.state.activeBucketsFilters['summary.kds.periodic_table'] && 
-                          this.state.activeBucketsFilters['summary.kds.periodic_table'].includes(elementsByPosition[i+1][j+1].name) ?
-                          ' ' + portals['GERM'].color : '')
-                      } style={{
-                        position: 'relative',
-                        /* backgroundColor: elementsByPosition[i+1][j+1]['cpk-hex'] && `#${elementsByPosition[i+1][j+1]['cpk-hex']}` || undefined, */
-                        width: '3rem', height: '4.5rem', padding: '1rem 0'}}
+                      <div 
+                        className={'ui button' + 
+                          (this.state.elementCounts[elementsByPosition[i+1][j+1].name] ? '' : ' disabled') + 
+                          (this.state.activeBucketsFilters['summary.kds.periodic_table'] && 
+                            this.state.activeBucketsFilters['summary.kds.periodic_table'].includes(elementsByPosition[i+1][j+1].name) ?
+                            ' ' + portals['GERM'].color : '')
+                        }
+                        style={{
+                          position: 'relative', width: '3rem', height: '4.5rem', padding: '1rem 0'
+                        }}
                         onClick={() => {
                           const filterName = 'summary.kds.periodic_table';
                           const element = elementsByPosition[i+1][j+1].name;
                           let activeBucketsFilters = _.cloneDeep(this.state.activeBucketsFilters);
-                          console.log(this.state.activeBucketsFilters[filterName], activeBucketsFilters[filterName]);
                           activeBucketsFilters[filterName] = activeBucketsFilters[filterName] || [];
                           if (activeBucketsFilters[filterName].includes(element))
                             activeBucketsFilters[filterName] = activeBucketsFilters[filterName].filter(x => x !== element);
@@ -1218,7 +1212,7 @@ class Search extends React.Component {
                         }}
                       >
                         { elementsByPosition[i+1][j+1].symbol }
-                        <div class="ui bottom attached mini basic label">
+                        <div className="ui bottom attached mini basic label">
                           {this.state.elementCounts[elementsByPosition[i+1][j+1].name] || '0'}
                         </div>
                       </div>
@@ -1379,22 +1373,6 @@ class Search extends React.Component {
         es={es}
         table={activeView.es.type === 'experiments' ? 'measurements' : activeView.es.type}
         pageSize={20}
-      />
-    );
-    if (activeView.name === 'Map') return (
-      <SearchMapView
-        key={this.state.levelNumber + '_' + activeView.name}
-        style={viewStyle}
-        es={_.extend({}, es, {queries: _.concat(searchQueries, {exists: 
-          {field: this.state.levelNumber < 2 ? "summary._all._geo_envelope" : "summary._all._geo_point"}
-        })})}
-      />
-    );
-    if (activeView.name === 'Images' || activeView.name === 'Plots') return (
-      <SearchImagesView
-        key={this.state.levelNumber + '_' + activeView.name}
-        style={viewStyle}
-        es={es}
       />
     );
   }
