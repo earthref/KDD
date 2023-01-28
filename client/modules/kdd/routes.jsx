@@ -80,7 +80,7 @@ const Routes = ({match}) => (
       <Redirect to={{
         pathname: "/KdD/search", 
         state: {
-          search: `id:"${match.params.id}" ` + location.search || ""
+          search: `id:"${match.params.id.replace(/\/$/, "")}" ` + location.search || ""
         }
       }}/>
     }/>
@@ -92,14 +92,19 @@ const Routes = ({match}) => (
         }
       }}/>
     }/>
-    <Route exact path="/KdD/e::element(.+)" render={({match, location}) =>
-      <Redirect to={{
-        pathname: "/KdD/search", 
-        state: {
-          search: `element:"${elements.filter(x => x.number == match.params.element).length && elements.filter(x => x.number == match.params.element)[0].name}" ` + location.search || ""
-        }
-      }}/>
-    }/>
+    <Route exact path="/KdD/e:element(.+)" render={({ match, location }) => {
+      const number = match.params.element.replace(/^:/, "").replace(/\/$/, "");
+      const element = elements.filter(x => x.number == number);
+      let search = "";
+      if (element.length)
+        search = `element:"${element[0].name}" `;
+      return (
+        <Redirect to={{
+          pathname: "/KdD/search", 
+          state: { search: search + location.search }
+        }} />
+      );
+    }}/>
     
     {/* Other Tools */}
     <Route exact path="/KdD/validate" render={() =>
