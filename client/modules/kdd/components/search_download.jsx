@@ -80,7 +80,7 @@ export default class extends React.Component {
         } else if (this.canceled) {
           this.setState({progress: undefined});
         } else {
-          results.hits.hits.map(hit => {
+          results.body.hits.hits.map(hit => {
             console.log('hit._source', hit._source)
             this.downloadedRows[hit._source.type] = this.downloadedRows[hit._source.type] || [];
             let reference, citation;
@@ -97,9 +97,8 @@ export default class extends React.Component {
               }));
             processedHits++;
           });
-          console.log('SearchDownload', processedHits, results.hits.total.value);
-          this.setState({progress: Math.floor(100*processedHits/results.hits.total.value)});
-          if (results.hits.total.value > processedHits)
+          this.setState({progress: Math.floor(100*processedHits/results.body.hits.total.value)});
+          if (results.body.hits.total.value > processedHits)
             Meteor.call('esScrollByID', results._scroll_id, processResults);
           else if (this.state.format === "text") {
             const exporter = new ExportContribution({});

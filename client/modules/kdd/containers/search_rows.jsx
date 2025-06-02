@@ -7,7 +7,7 @@ import {compose} from '@storybook/react-komposer';
 export const composer = ({es, pageSize, pageNumber}, onData) => {
   onData(null, { rows: undefined, title: undefined });
   let source = {
-    include: [
+    includes: [
       'columns',
       'rows',
       'summary.contribution._reference.citation',
