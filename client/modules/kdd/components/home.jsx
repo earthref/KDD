@@ -7,6 +7,8 @@ import SearchDividedList from '/client/modules/common/containers/search_divided_
 import SearchSummariesListItem from '/client/modules/kdd/containers/search_summaries_list_item';
 import News from '/client/modules/kdd/components/home_news';
 import {levels} from '/lib/configs/kdd/search_levels.js';
+import assetUrl from '/client/lib/asset_url';
+
 
 export default class extends React.Component {
 
@@ -102,7 +104,7 @@ export default class extends React.Component {
               <div className="ui divided relaxed items">
                 <a className="item">
                   <div className="ui tiny image">
-                    <img className="ui bordered image" src="/MagIC/plot.png" style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
+                    <img className="ui bordered image" src={assetUrl('/KdD/plot.png')} style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
                   </div>
                   <div className="content">
                     <h5 className="ui header">Selkin, P.A., Gee, J.S. and Tauxe, L. (2007).</h5>
@@ -113,7 +115,7 @@ export default class extends React.Component {
                 </a>
                 <a className="item">
                   <div className="ui tiny image">
-                    <img className="ui bordered image" src="/MagIC/plot.png" style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
+                    <img className="ui bordered image" src={assetUrl('/KdD/plot.png')} style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
                   </div>
                   <div className="content">
                     <h5 className="ui header">Selkin, P.A., Gee, J.S. and Tauxe, L. (2007).</h5>
@@ -124,7 +126,7 @@ export default class extends React.Component {
                 </a>
                 <a className="item">
                   <div className="ui tiny image">
-                    <img className="ui bordered image" src="/MagIC/plot.png" style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
+                    <img className="ui bordered image" src={assetUrl('/KdD/plot.png')} style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
                   </div>
                   <div className="content">
                     <h5 className="ui header">Selkin, P.A., Gee, J.S. and Tauxe, L. (2007).</h5>
@@ -135,7 +137,7 @@ export default class extends React.Component {
                 </a>
                 <a className="item">
                   <div className="ui tiny image">
-                    <img className="ui bordered image" src="/MagIC/plot.png" style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
+                    <img className="ui bordered image" src={assetUrl('/KdD/plot.png')} style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
                   </div>
                   <div className="content">
                     <h5 className="ui header">Selkin, P.A., Gee, J.S. and Tauxe, L. (2007).</h5>
@@ -146,7 +148,7 @@ export default class extends React.Component {
                 </a>
                 <a className="item">
                   <div className="ui tiny image">
-                    <img className="ui bordered image" src="/MagIC/plot.png" style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
+                    <img className="ui bordered image" src={assetUrl('/KdD/plot.png')} style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
                   </div>
                   <div className="content">
                     <h5 className="ui header">Selkin, P.A., Gee, J.S. and Tauxe, L. (2007).</h5>
@@ -157,7 +159,7 @@ export default class extends React.Component {
                 </a>
                 <a className="item">
                   <div className="ui tiny image">
-                    <img className="ui bordered image" src="/MagIC/plot.png" style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
+                    <img className="ui bordered image" src={assetUrl('/KdD/plot.png')} style={{border:'1px solid rgba(0, 0, 0, 0.1)'}}/>
                   </div>
                   <div className="content">
                     <h5 className="ui header">Selkin, P.A., Gee, J.S. and Tauxe, L. (2007).</h5>

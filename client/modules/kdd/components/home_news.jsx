@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 import {Image, Message} from 'semantic-ui-react';
 
 import {portals} from '/lib/configs/portals.js';
+import assetUrl from '/client/lib/asset_url';
+
 
 export default class extends React.Component {
 
@@ -10,7 +12,7 @@ export default class extends React.Component {
     return (
       <div style={{textAlign: "justify"}}>
         <h3>
-          <Image size="mini" src="/KdD/FIESTA small.png" floated="left"/>
+          <Image size="mini" src={assetUrl('/KdD/FIESTA small.png')} floated="left"/>
           {` EarthRef FIESTA`}
         </h3>
         <p>

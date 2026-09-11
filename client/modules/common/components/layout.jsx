@@ -12,6 +12,8 @@ import {portals} from '/lib/configs/portals';
 import Navigation from '/client/modules/common/components/navigation';
 import { User } from './user';
 import { LogIn } from './login';
+import assetUrl from '/client/lib/asset_url';
+
 
 class Layout extends React.Component {
 
@@ -139,7 +141,7 @@ class Layout extends React.Component {
               <a className={'ui button compact basic ' + portals['EarthRef.org'].color} style={{margin: '0.5em 1em'}}
                  href="https://earthref.org/FIESTA">
                  Powered by
-                 <img src="/KdD/FIESTA small.png" style={{ height: '1.75em', margin: '-1.25em 0.5em -.5em' }}/>
+                 <img src={assetUrl('/KdD/FIESTA small.png')} style={{ height: '1.75em', margin: '-1.25em 0.5em -.5em' }}/>
                 <b>FIESTA</b>
               </a>
             </div>

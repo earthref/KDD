@@ -8,6 +8,8 @@ import uuid from 'uuid';
 import * as EmailValidator from 'email-validator';
 
 import { portals } from '/lib/configs/portals';
+import assetUrl from '/client/lib/asset_url';
+
 
 const orcidURL = Meteor.isDevelopment ? 'sandbox.orcid.org' : 'orcid.org';
 const orcidClientID = Meteor.isDevelopment ? 'APP-F8JQS3NCYGINEF7B' : 'APP-7V8YQW9CI7R01H1T';
@@ -108,7 +110,7 @@ export function User({ openInitially, className, portal }) {
 									</Table.Row>
 									<Table.Row>
 										<Table.Cell>
-											<img src='/ORCIDiD_icon64x64.png'
+											<img src={assetUrl('/ORCIDiD_icon64x64.png')}
 												style={{ height: '1.25em', margin: '-.25em .25em -.25em 0' }}
 											/>
 											ORCID iD
@@ -208,7 +210,7 @@ export function User({ openInitially, className, portal }) {
 													}
 												}}
 											>
-												<img src='/ORCIDiD_icon64x64.png'
+												<img src={assetUrl('/ORCIDiD_icon64x64.png')}
 													style={{ height: '1.25em', margin: '-.25em .25em -.25em 0' }}
 												/>
 												Disconnect Your EarthRef Account From ORCID
@@ -221,7 +223,7 @@ export function User({ openInitially, className, portal }) {
 						{ (!user.orcid || !user.orcid.id) && 
 							<>
 								<Button	fluid as='a' href={ orcidAuthorizeURL }>
-									<img src='/ORCIDiD_icon64x64.png'
+									<img src={assetUrl('/ORCIDiD_icon64x64.png')}
 										style={{ height: '1.25em', margin: '-.25em .25em -.25em 0' }}
 									/>
 									Connect Your EarthRef Account to ORCID
